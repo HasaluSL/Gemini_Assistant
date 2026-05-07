@@ -63,6 +63,16 @@ export GEMINI_API_KEY="your_api_key"
 python main.py
 ```
 
+## Practical Demo
+
+To test the tools without the Gemini API, run the demo script:
+
+```bash
+python practical_demo.py
+```
+
+This demonstrates calculator, file reader, text stats, and time tools.
+
 ## Suggested Test Prompts
 
 - "What time is it right now?"
