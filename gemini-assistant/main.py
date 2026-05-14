@@ -11,6 +11,7 @@ from adaptive_assistant.tools import (
     LocalFileReaderTool,
     TextStatsTool,
     TimeTool,
+    UrlFetcherTool,
     WeatherTool,
 )
 
@@ -24,6 +25,7 @@ def build_agent() -> Agent:
     registry.register(WeatherTool())
     registry.register(LocalFileReaderTool(allowed_root=Path.cwd()))
     registry.register(TextStatsTool())
+    registry.register(UrlFetcherTool())
 
     memory = MemoryManager()
     model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")

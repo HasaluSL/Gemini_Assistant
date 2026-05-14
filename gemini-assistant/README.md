@@ -21,13 +21,14 @@ The project is intentionally split by responsibility:
 
 ## Implemented Tools
 
-Total tools: **5**
+Total tools: **6**
 
 1. `calculator`
 2. `current_time`
 3. `weather_lookup`
 4. `read_local_file` (custom)
 5. `text_stats` (custom)
+6. `url_fetcher` (custom)
 
 ## Setup
 

@@ -11,6 +11,7 @@ from adaptive_assistant.models import ModelResponse, ToolCall
 from adaptive_assistant.registry import ToolRegistry
 from adaptive_assistant.tools.base import BaseTool
 from adaptive_assistant.tools.file_reader import LocalFileReaderTool
+from adaptive_assistant.tools.url_fetcher import UrlFetcherTool
 
 
 class EchoTool(BaseTool):
@@ -111,6 +112,37 @@ class RegistryAndToolTests(unittest.TestCase):
             result = tool.execute(path="..\\outside.txt")
 
         self.assertEqual(result, {"ok": False, "error": "Path is outside allowed directory."})
+
+    @patch('adaptive_assistant.tools.url_fetcher.requests.get')
+    def test_url_fetcher_success(self, mock_get) -> None:
+        mock_response = unittest.mock.Mock()
+        mock_response.text = "Hello World"
+        mock_response.status_code = 200
+        mock_response.headers = {"content-type": "text/plain"}
+        mock_response.raise_for_status.return_value = None
+        mock_get.return_value = mock_response
+
+        tool = UrlFetcherTool()
+        result = tool.execute(url="https://example.com")
+
+        self.assertEqual(result["ok"], True)
+        self.assertEqual(result["content"], "Hello World")
+        self.assertEqual(result["status_code"], 200)
+        self.assertEqual(result["content_type"], "text/plain")
+
+    def test_url_fetcher_invalid_url(self) -> None:
+        tool = UrlFetcherTool()
+        result = tool.execute(url="ftp://example.com")
+
+        self.assertEqual(result["ok"], False)
+        self.assertIn("URL must start with http", result["error"])
+
+    def test_url_fetcher_missing_url(self) -> None:
+        tool = UrlFetcherTool()
+        result = tool.execute()
+
+        self.assertEqual(result["ok"], False)
+        self.assertIn("Missing URL", result["error"])
 
 
 if __name__ == "__main__":
